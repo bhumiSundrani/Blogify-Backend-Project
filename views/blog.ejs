@@ -9,7 +9,7 @@
     <div class="container text-center">
         <p class="h1 mt-4"><%= blog.title %></p>
         <% if(blog.coverImageUrl) {%>
-            <img src="<%= blog.coverImageUrl %>" class="rounded" alt="..." width="700px">
+            <img src="<%= blog.coverImageUrl %>" class="rounded img-fluid" alt="..." style="max-width: 700px; width: 100%;" />
         <% } %>
         <% if(blog.body) {%>
             <p class="mt-4" style="text-align: justify;"><%= blog.body %></p>
