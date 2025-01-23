@@ -14,7 +14,10 @@ const PORT = process.env.PORT || 5000
 //connect to mongo db
 connectToMongoDb(process.env.MONGO_URL)
 .then(() => console.log("Server connected to mongoDb"))
-.catch((error) => console.error("Error connecting to MongoDb: ", error))
+.catch((error) =>{ 
+    console.error("Error connecting to MongoDb: ", error)
+    process.exit(1); 
+})
 
 //middleware
 app.use(express.urlencoded({extended: false}))
@@ -28,10 +31,17 @@ app.set('views', path.resolve("./views"))
 
 //router
 app.get('/', async (req, res) => {
-    const allBlogs = await Blog.find({})
-    return res.render('home', {user: req.user, blogs: allBlogs})
+    try {
+        const allBlogs = await Blog.find({});
+        return res.render('home', { user: req.user, blogs: allBlogs });
+    } catch (error) {
+        console.error("Error fetching blogs:", error);
+        return res.status(500).send("Internal Server Error");
+    }
 })
 app.use('/user', userRoute)
 app.use('/blog', blogRouter)
 
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
+
+module.exports = app;
