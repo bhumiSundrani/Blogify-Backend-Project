@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Blog Page</title>
+</head>
+<body class="mb-8">
+    <%- include('./partials/nav') %>
+    <div class="container text-center">
+        <p class="h1 mt-4"><%= blog.title %></p>
+        <% if(blog.coverImageUrl) {%>
+            <img src="<%= blog.coverImageUrl %>" class="rounded" alt="..." width="700px">
+        <% } %>
+        <% if(blog.body) {%>
+            <p class="mt-4" style="text-align: justify;"><%= blog.body %></p>
+        <% } %>
+        <img src="<%= blog.createdBy.profileImageUrl %>" width="50px" alt="" style="border-radius: 100%;"><%= blog.createdBy.fullName %>
+        
+    </div>
+
+    <div class="container mt-3  mb-8">
+        <h1>Comments(<%=locals.comments.length%>)</h1>
+        <% if(locals.user) {%>
+            <form action="/blog/comment/<%= blog._id %>" method="post" style="margin-bottom: 20px">
+                <div class="input-group">
+                    <textarea class="form-control" id="commentBox" rows="1" placeholder="Add a comment..." name="content"></textarea>
+                    <button class="btn btn-primary" type="submit">Post</button>
+                </div>
+            </form>
+        <% } %>
+        <% if(locals.comments) {%>
+            <% locals.comments.forEach(comment => { %>
+                <div class="border rounded p-3 mb-3 bg-light">
+                    <!-- User Info -->
+                    <div class="d-flex align-items-center">
+                      <img 
+                        src="<%= comment.createdBy.profileImageUrl %>" 
+                        alt="User Avatar" 
+                        class="me-3"
+                        style="width: 50px; height: 50px; border-radius: 50%;"
+                      >
+                      <div>
+                        <h6 class="mb-0"><%= comment.createdBy.fullName %></h6>
+                      </div>
+                    </div>
+                    <!-- Comment Content -->
+                    <p class="mt-3 mb-0">
+                        <%= comment.content %>
+                    </p>
+                  </div>
+            <% }) %>
+        <% } if(locals.comments.length == 0){%>
+            <div class="text-center border rounded p-4 bg-light mb-3">
+                <h6 class="text-muted">No comments yet</h6>
+                <% if(locals.user){ %>
+                    <p class="text-muted mb-0">Be the first to add a comment!</p>
+                <% } %>
+              </div>
+        <% } %>
+    </div>   
+    <%- include('./partials/script') %>
+</body>
+</html>
